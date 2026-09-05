@@ -7,10 +7,7 @@ pub use normpath::{error::*, BasePath as Path, BasePathBuf as PathBuf};
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     #[error("Cannot get root directory")]
-    IO {
-        #[from]
-        source: io::Error,
-    },
+    IO(#[from] io::Error),
     #[error("Cannot get root directory as parent of path")]
     Parent(#[from] ParentError),
     #[error("Cannot get project root, parent missing")]

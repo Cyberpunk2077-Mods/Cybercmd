@@ -1,5 +1,3 @@
-#![feature(macro_metavar_expr)]
-
 use std::env;
 
 use crate::{config::Config, dist::dist, install::install, scratch::scratch, test::test};

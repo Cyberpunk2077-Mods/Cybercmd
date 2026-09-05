@@ -6,12 +6,10 @@ use xshell::{cmd, Shell};
 
 use crate::config::Config;
 
-pub const RELEASE_ARGS: [&str; 5] = [
+pub const RELEASE_ARGS: [&str; 3] = [
     "-Z",
     "build-std",
     "--release",
-    "--target",
-    "x86_64-pc-windows-msvc",
 ];
 
 pub const TEST_ARGS: [&str; 2] = ["-Z", "build-std=std"];
@@ -22,15 +20,7 @@ where
     II: AsRef<OsStr>,
 {
     println!("Start: Staging cybercmd");
-    let binary_path = if build_args
-        .clone()
-        .into_iter()
-        .any(|item| item.as_ref() == "-r" || item.as_ref() == "--release")
-    {
-        &config.paths.release
-    } else {
-        &config.paths.debug
-    };
+    let binary_path = artifact_dir(config, build_args);
 
     println!("Cleanup staging");
     config.paths.clean_staging()?;
@@ -54,6 +44,50 @@ where
     println!("Done:  Staging cybercmd");
 
     Ok(())
+}
+
+fn artifact_dir<I, II>(config: &Config<'_>, build_args: &I) -> common::path::PathBuf
+where
+    I: IntoIterator<Item = II> + Clone,
+    II: AsRef<OsStr>,
+{
+    let args: Vec<_> = build_args
+        .clone()
+        .into_iter()
+        .map(|a| a.as_ref().to_os_string())
+        .collect();
+
+    let is_release = args
+        .iter()
+        .any(|item| item == "-r" || item == "--release");
+    let profile = if is_release { "release" } else { "debug" };
+
+    // Prefer explicit --target output dir when present.
+    let mut target_triple = None;
+    let mut i = 0;
+    while i < args.len() {
+        let arg = args[i].to_string_lossy();
+        if arg == "--target" {
+            if let Some(next) = args.get(i + 1) {
+                target_triple = Some(next.to_string_lossy().into_owned());
+                break;
+            }
+        } else if let Some(rest) = arg.strip_prefix("--target=") {
+            target_triple = Some(rest.to_owned());
+            break;
+        }
+        i += 1;
+    }
+
+    if let Some(triple) = target_triple {
+        return config.paths.root.join("target").join(triple).join(profile);
+    }
+
+    if is_release {
+        config.paths.release.clone()
+    } else {
+        config.paths.debug.clone()
+    }
 }
 
 #[allow(clippy::module_name_repetitions)]

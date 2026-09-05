@@ -55,7 +55,7 @@ impl Paths {
     }
 
     pub fn clean_staging(&self) -> anyhow::Result<()> {
-        println!("Removing: {:?}", &self.staging);
+        println!("Removing: {:?}", self.staging);
         remove_dir_all(&self.staging)?;
         create_dir_all(&self.staging)?;
         create_dir_all(&self.staging_bin)?;
@@ -65,7 +65,7 @@ impl Paths {
     }
 
     pub fn clean_dist(&self) -> anyhow::Result<()> {
-        println!("Removing: {:?}", &self.dist);
+        println!("Removing: {:?}", self.dist);
         remove_dir_all(&self.dist)?;
         create_dir_all(&self.dist)?;
         Ok(())

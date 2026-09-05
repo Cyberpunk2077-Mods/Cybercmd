@@ -117,8 +117,8 @@ fn run_mod_tasks(context: &AppContext, config: &GameConfig) {
                 ]
                 .map(str::to_string),
                 &HashMap::from([
-                    ("path".to_string(), path.to_string()),
-                    ("custom_cache_dir".to_string(), custom_cache_dir.to_string()),
+                    ("path".to_string(), path.clone()),
+                    ("custom_cache_dir".to_string(), custom_cache_dir.clone()),
                 ]),
             ),
             Task::V2 {

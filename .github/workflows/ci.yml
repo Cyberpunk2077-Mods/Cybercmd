@@ -17,7 +17,8 @@ jobs:
       - name: Run rustfmt
         shell: pwsh
         run: |
-          $rustfmt_output = cargo fmt --all --check -- --color always 2> $null
+          # Format workspace crates only — skip vendored path deps (e.g. detour-rs).
+          $rustfmt_output = cargo fmt -p cybercmd -p common -p xtask -p test -- --check --color always 2> $null
           $rustfmt_exit_code = $LASTEXITCODE
           if ($rustfmt_exit_code -ne 0 ) {
             # Create an error annotation
@@ -26,7 +27,7 @@ jobs:
                 "Code formatting error.",
                 " ",
                 "This project requires code to conform to the rustfmt style.",
-                "Please run ``cargo fmt --all`` before commiting."
+                "Please run ``cargo fmt -p cybercmd -p common -p xtask -p test`` before committing."
               ) -join '%0A')"
 
             Write-Output ""
@@ -48,4 +49,5 @@ jobs:
           shared-key: cybercmd
           cache-on-failure: true
       - run: echo "::add-matcher::.github/clippy-matcher.json"
-      - run: cargo clippy -- -Dwarnings
+      # Workspace crates only; --no-deps skips vendored path deps (detour-rs).
+      - run: cargo clippy -p cybercmd -p common -p xtask -p test --no-deps -- -Dwarnings

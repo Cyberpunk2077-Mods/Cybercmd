@@ -31,7 +31,7 @@ impl ArgumentContext {
         let mut new_context = Self::new(&context.paths);
         new_context.0.extend(hash_map.iter().map(|(key, val)| {
             (
-                key.to_string(),
+                key.clone(),
                 render(val, context.argument_context.clone()),
             )
         }));

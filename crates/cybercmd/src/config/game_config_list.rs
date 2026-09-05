@@ -69,7 +69,7 @@ impl GameConfigList {
                     }
                     Err(error) => log::error!(
                         "In {} ({}): {}",
-                        &entry.path().normalize_virtually()?.quote(),
+                        entry.path().normalize_virtually()?.quote(),
                         match error.span() {
                             Some(val) => format!("{val:?}"),
                             None => String::new(),
