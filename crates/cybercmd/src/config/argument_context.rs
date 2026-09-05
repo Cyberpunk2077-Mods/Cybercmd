@@ -29,12 +29,11 @@ impl ArgumentContext {
     #[must_use]
     pub fn from(context: &AppContext, hash_map: &HashMap<String, String>) -> Self {
         let mut new_context = Self::new(&context.paths);
-        new_context.0.extend(hash_map.iter().map(|(key, val)| {
-            (
-                key.clone(),
-                render(val, context.argument_context.clone()),
-            )
-        }));
+        new_context.0.extend(
+            hash_map
+                .iter()
+                .map(|(key, val)| (key.clone(), render(val, context.argument_context.clone()))),
+        );
         debug!("Created new ArgumentContext: {new_context:?}");
         new_context
     }

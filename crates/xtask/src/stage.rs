@@ -6,11 +6,7 @@ use xshell::{cmd, Shell};
 
 use crate::config::Config;
 
-pub const RELEASE_ARGS: [&str; 3] = [
-    "-Z",
-    "build-std",
-    "--release",
-];
+pub const RELEASE_ARGS: [&str; 3] = ["-Z", "build-std", "--release"];
 
 pub const TEST_ARGS: [&str; 2] = ["-Z", "build-std=std"];
 
@@ -57,9 +53,7 @@ where
         .map(|a| a.as_ref().to_os_string())
         .collect();
 
-    let is_release = args
-        .iter()
-        .any(|item| item == "-r" || item == "--release");
+    let is_release = args.iter().any(|item| item == "-r" || item == "--release");
     let profile = if is_release { "release" } else { "debug" };
 
     // Prefer explicit --target output dir when present.
