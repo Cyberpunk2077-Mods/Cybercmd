@@ -8,10 +8,10 @@ use crate::config::Config;
 
 pub const RELEASE_ARGS: [&str; 5] = [
     "-Z",
-    "build-std=std,panic_abort",
-    "-Z",
-    "build-std-features=panic_immediate_abort",
+    "build-std",
     "--release",
+    "--target",
+    "x86_64-pc-windows-msvc",
 ];
 
 pub const TEST_ARGS: [&str; 2] = ["-Z", "build-std=std"];

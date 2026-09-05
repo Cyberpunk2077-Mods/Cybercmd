@@ -1,3 +1,5 @@
+cargo-features = ["panic-immediate-abort"]
+
 [workspace]
 members = ["crates/cybercmd", "crates/xtask", "crates/test", "crates/common"]
 resolver = "2"
@@ -13,7 +15,7 @@ test = { path = "crates/test", version = "0.0.0" }
 xtask = { path = "crates/xtask", version = "0.0.0" }
 
 anyhow = "1"
-detour = { git = "https://github.com/veeenu/detour-rs", rev = "ec23632" }
+detour = { path = "vendor/detour-rs" }
 flexi_logger = "0.30"
 log = "0.4"
 microtemplate = "1"
@@ -63,4 +65,5 @@ match_bool = "warn"
 lto = true
 strip = true
 codegen-units = 1
-panic = "abort"
+# Replaces obsolete -Zbuild-std-features=panic_immediate_abort (nightly).
+panic = "immediate-abort"

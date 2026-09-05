@@ -19,9 +19,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: dtolnay/rust-toolchain@stable
+      # Match rust-toolchain.toml (nightly + rust-src required for -Zbuild-std).
+      - uses: dtolnay/rust-toolchain@nightly
         with:
           targets: x86_64-pc-windows-msvc
+          components: rust-src
       - uses: Swatinem/rust-cache@v2
       - name: Apply tag version to source
         if: github.ref_type == 'tag'
